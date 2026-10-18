@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#000000"><meta name="mobile-web-app-capable" content="yes"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><title>الظلام تحت المدينة</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--fg:#cfeee8;--bg:#000}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;font-family:system-ui,Tahoma,sans-serif;color:var(--fg)}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+#vg{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.85) 100%)}
+#gr{position:fixed;inset:-50%;pointer-events:none;opacity:.1;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");animation:g .4s steps(4) infinite}
+@keyframes g{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+#dm{position:fixed;inset:0;pointer-events:none;background:rgba(200,0,0,.5);opacity:0;transition:opacity .3s}
+.h{position:fixed;pointer-events:none;direction:rtl}
+#loc{left:4%;bottom:calc(env(safe-area-inset-bottom,0px) + 150px);font-size:18px;letter-spacing:1px}
+#pb{left:4%;bottom:calc(env(safe-area-inset-bottom,0px) + 118px);font-size:12px;opacity:.85}
+#hp{right:4%;top:calc(env(safe-area-inset-top,0px) + 14px);width:120px;height:6px;background:#133;border-radius:3px}
+#hpi{height:100%;width:100%;background:#4fe;border-radius:3px}
+#am{right:4%;top:calc(env(safe-area-inset-top,0px) + 28px);font-size:20px;direction:ltr}
+#ms{left:50%;transform:translateX(-50%);top:14%;font-size:15px;text-align:center;max-width:80%;opacity:0;transition:opacity .5s;background:rgba(0,0,0,.6);padding:10px 14px;border-radius:8px;line-height:1.6}
+#cr{left:50%;top:50%;width:4px;height:4px;margin:-2px;background:#fff8;border-radius:50%}
+#st{position:fixed;left:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);width:100px;height:100px;border-radius:50%;border:2px solid #4fe5;pointer-events:none}
+#kn{position:absolute;left:30px;top:30px;width:40px;height:40px;border-radius:50%;background:#4fe6}
+.b{position:fixed;border-radius:50%;border:2px solid #4fe9;background:#0338;color:var(--fg);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+#fire{right:22px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);width:84px;height:84px;background:#a003}
+#rel{right:116px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);width:56px;height:56px}
+#use{right:34px;bottom:calc(env(safe-area-inset-bottom,0px) + 125px);width:62px;height:62px;display:none;background:#fc03}
+#ov{position:fixed;inset:0;background:rgba(0,8,8,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:14px}
+#ov h1{margin:0;font-size:30px;letter-spacing:2px;color:#6fe}
+#ov p{max-width:420px;line-height:1.8;font-size:14px;margin:0}
+#go{padding:14px 40px;font-size:18px;background:#0a3a38;color:#cfe;border:2px solid #4fe;border-radius:10px}
+</style></head><body>
+<div id="vg"></div><div id="gr"></div><div id="dm"></div>
+<div id="loc" class="h">القطار المنحرف</div><div id="pb" class="h">لوحة الحبكة: <span id="ob"></span></div>
+<div id="hp" class="h"><div id="hpi"></div></div><div id="am" class="h"></div><div id="cr" class="h"></div><div id="ms" class="h"></div>
+<div id="st"><div id="kn"></div></div>
+<div id="fire" class="b">إطلاق</div><div id="rel" class="b">تذخير</div><div id="use" class="b">خذ</div>
+<div id="ov"><h1>الظلام تحت المدينة</h1>
+<p id="tx">أنت المحقق «يوسف»، قبل ساعات خرج القطار رقم 7 عن مساره في نفق المترو القديم وهو يحمل عينات من مختبر «نيكروس». منذ الحادث لم يعد أحد يخرج من النفق، وأصبحت الظلال تتحرك وحدها.<br>اجمع 3 فيوزات لتشغيل بوابة الخروج في آخر النفق. الذخيرة قليلة، والضوء صديقك.<br><small>يسار: حركة · يمين: نظر · زر الإطلاق والتذخير</small></p>
+<button id="go">ابدأ</button></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=id=>document.getElementById(id),rnd=Math.random;
+const R=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;R.outputEncoding=THREE.sRGBEncoding;document.body.prepend(R.domElement);
+const S=new THREE.Scene();S.background=new THREE.Color(0x010807);S.fog=new THREE.FogExp2(0x04201f,.065);
+const C=new THREE.PerspectiveCamera(72,1,.05,120);C.rotation.order='YXZ';S.add(C);
+function rs(){R.setSize(innerWidth,innerHeight);C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix()}addEventListener('resize',rs);rs();
+function tex(w,h,fn,rx,ry){const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;t.encoding=THREE.sRGBEncoding;return t}
+function noise(x,w,h,n,base){x.fillStyle=base;x.fillRect(0,0,w,h);for(let i=0;i<n;i++){const v=20+rnd()*50|0;x.fillStyle=`rgba(${v},${v+12},${v+10},.3)`;x.fillRect(rnd()*w,rnd()*h,rnd()*7,rnd()*7)}}
+const cols=['#c8e84a','#e8703a','#4ac8e8','#e84a9a'];
+const wallT=(rx)=>tex(512,256,(x,w,h)=>{noise(x,w,h,4000,'#243432');x.lineCap='round';for(let i=0;i<9;i++){x.strokeStyle=cols[i%4];x.globalAlpha=.55;x.lineWidth=5+rnd()*8;x.beginPath();x.moveTo(rnd()*w,60+rnd()*140);x.bezierCurveTo(rnd()*w,rnd()*h,rnd()*w,rnd()*h,rnd()*w,60+rnd()*140);x.stroke()}x.globalAlpha=.6;x.fillStyle='#c8e84a';x.font='bold 60px sans-serif';x.fillText('اهرب',rnd()*300,120);x.globalAlpha=1;for(let i=0;i<30;i++){x.fillStyle='rgba(0,0,0,.25)';x.fillRect(rnd()*w,0,2+rnd()*8,h)}},rx,1);
+const L=250,Z0=3,mat=(o)=>new THREE.MeshLambertMaterial(o);
+const tileT=rx=>tex(512,512,(x,w,h)=>{x.fillStyle='#14160f';x.fillRect(0,0,w,h);const n=8,s=w/n;for(let i=0;i<n;i++)for(let j=0;j<n;j++){const v=rnd(),X=i*s+3,Y=j*s+3;x.fillStyle=`rgb(${80+v*35|0},${75+v*35|0},${38+v*20|0})`;x.fillRect(X,Y,s-6,s-6);const gr=x.createLinearGradient(0,Y,0,Y+s);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(8,28,20,.5)');x.fillStyle=gr;x.fillRect(X,Y,s-6,s-6);if(rnd()<.5){x.strokeStyle='rgba(0,0,0,.75)';x.lineWidth=1.5;x.beginPath();let px=X+rnd()*s,py=Y+rnd()*s;x.moveTo(px,py);for(let k=0;k<5;k++){px+=(rnd()-.5)*30;py+=(rnd()-.2)*30;x.lineTo(px,py)}x.stroke()}}
+for(let i=0;i<40;i++){x.fillStyle=`rgba(70,${120+rnd()*60|0},${100+rnd()*50|0},.12)`;x.beginPath();x.arc(rnd()*w,rnd()*h,10+rnd()*40,0,7);x.fill()}
+for(let i=0;i<6000;i++){const v=rnd()*255|0;x.fillStyle=`rgba(${v},${v},${v*.8|0},.08)`;x.fillRect(rnd()*w,rnd()*h,2,2)}
+for(let i=0;i<25;i++){x.fillStyle='rgba(5,10,8,.35)';x.fillRect(rnd()*w,0,1+rnd()*4,rnd()*h)}
+x.strokeStyle='#080a08';x.lineWidth=5;for(let i=0;i<=n;i++){x.beginPath();x.moveTo(i*s,0);x.lineTo(i*s,h);x.stroke();x.beginPath();x.moveTo(0,i*s);x.lineTo(w,i*s);x.stroke()}},rx,1);
+const wm=()=>{const t=tileT(52);return new THREE.MeshStandardMaterial({map:t,bumpMap:t,bumpScale:3,roughness:.75,metalness:.05})};
+const fl2=tex(512,512,(x,w,h)=>{noise(x,w,h,9000,'#1b2422');x.strokeStyle='rgba(0,0,0,.8)';for(let i=0;i<30;i++){x.lineWidth=1+rnd()*2;x.beginPath();let px=rnd()*w,py=rnd()*h;x.moveTo(px,py);for(let k=0;k<8;k++){px+=(rnd()-.5)*60;py+=(rnd()-.5)*60;x.lineTo(px,py)}x.stroke()}for(let i=0;i<14;i++){x.fillStyle='rgba(60,40,20,.18)';x.beginPath();x.arc(rnd()*w,rnd()*h,15+rnd()*50,0,7);x.fill()}},2,50);
+const gT=tex(256,256,(x,w,h)=>{x.clearRect(0,0,w,h);x.strokeStyle='#2c3330';x.lineWidth=7;for(let i=0;i<=8;i++){x.beginPath();x.moveTo(i*32,0);x.lineTo(i*32,h);x.stroke();x.beginPath();x.moveTo(0,i*32);x.lineTo(w,i*32);x.stroke()}x.strokeStyle='rgba(120,70,30,.5)';x.lineWidth=2;for(let i=0;i<40;i++){x.beginPath();x.moveTo(rnd()*w,rnd()*h);x.lineTo(rnd()*w,rnd()*h);x.stroke()}},2.5,1);
+function pl(w,h,x,y,z,rx,ry,m){const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);p.position.set(x,y,z);p.rotation.set(rx,ry,0);S.add(p);return p}
+pl(10,L,0,0,-L/2+Z0,-Math.PI/2,0,new THREE.MeshStandardMaterial({map:fl2,bumpMap:fl2,bumpScale:2,roughness:.3,metalness:.4})).receiveShadow=true;
+pl(10,L,0,5,-L/2+Z0,Math.PI/2,0,mat({color:0x1a2625}));
+pl(L,5,-5,2.5,-L/2+Z0,0,Math.PI/2,wm()).receiveShadow=true;
+pl(L,5,5,2.5,-L/2+Z0,0,-Math.PI/2,wm()).receiveShadow=true;
+pl(10,5,0,2.5,Z0,0,0,mat({color:0x111}));
+// rails and sleepers
+const rm=mat({color:0x3a4442});[-.75,.75].forEach(x=>{const r=new THREE.Mesh(new THREE.BoxGeometry(.12,.15,L),rm);r.position.set(x,.1,-L/2+Z0);S.add(r)});
+const sl=new THREE.InstancedMesh(new THREE.BoxGeometry(2.6,.1,.3),mat({color:0x2a1f18}),L*2),mx=new THREE.Matrix4();
+for(let i=0;i<L*2;i++){mx.setPosition(0,.05,Z0-i*.5);sl.setMatrixAt(i,mx)}S.add(sl);
+const bm=new THREE.InstancedMesh(new THREE.BoxGeometry(10,.4,.5),mat({color:0x1b2928}),L/3|0);
+for(let i=0;i<L/3;i++){mx.setPosition(0,4.8,Z0-i*3);bm.setMatrixAt(i,mx)}S.add(bm);
+// puddles
+for(let i=0;i<14;i++)pl(1+rnd()*2,1+rnd()*3,-3+rnd()*6,.03,-rnd()*L,-Math.PI/2,0,new THREE.MeshBasicMaterial({color:0x2ad9c8,transparent:true,opacity:.18}));
+// lights
+const amb=new THREE.AmbientLight(0x0f2e2b,.9);S.add(amb);
+const lamps=[];for(let z=-10;z>-L;z-=38){const l=new THREE.PointLight(Math.round(z/38)%2?0xffb050:0x28ffe0,1.5,26,1.6);l.position.set(3.6,4.2,z);S.add(l);lamps.push(l);const f=new THREE.Mesh(new THREE.BoxGeometry(.2,.1,2.4),new THREE.MeshBasicMaterial({color:0x9ffff0}));f.position.copy(l.position);S.add(f);const cn=new THREE.Mesh(new THREE.ConeGeometry(2.4,4.2,18,1,true),new THREE.MeshBasicMaterial({color:0x28ffe0,transparent:true,opacity:.07,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));cn.position.set(3.6,2.1,z);S.add(cn)}
+const fl=new THREE.SpotLight(0xe8ffff,2.4,38,.5,.55,1.2);fl.castShadow=true;fl.shadow.mapSize.set(1024,1024);fl.shadow.bias=-.0006;fl.position.set(0,0,0);fl.target.position.set(0,0,-6);C.add(fl,fl.target);
+const dn=1800,dp=new Float32Array(dn*3);for(let i=0;i<dn*3;i+=3){dp[i]=-5+rnd()*10;dp[i+1]=rnd()*5;dp[i+2]=3-rnd()*L}const dgm=new THREE.BufferGeometry();dgm.setAttribute('position',new THREE.BufferAttribute(dp,3));const dust=new THREE.Points(dgm,new THREE.PointsMaterial({color:0xaffff0,size:.05,transparent:true,opacity:.55}));S.add(dust);
+const mz=new THREE.PointLight(0xffc060,0,8);C.add(mz);
+// colliders
+const K=[];
+function wreck(zc,side){const g=new THREE.Group(),x=side*3.2;
+ const b=new THREE.Mesh(new THREE.BoxGeometry(2.7,2.7,12),mat({color:0x4d5e5b}));b.position.y=1.5;b.castShadow=true;b.receiveShadow=true;g.add(b);
+ for(let i=0;i<5;i++){const w=new THREE.Mesh(new THREE.BoxGeometry(2.8,.8,1.2),new THREE.MeshBasicMaterial({color:i%2?0x050a0a:0x8a1a10}));w.position.set(0,1.9,-4.5+i*2.2);g.add(w)}
+ g.position.set(x,0,zc);g.rotation.z=-side*.12;S.add(g);K.push({x1:x-1.5,x2:x+1.5,z1:zc-6.2,z2:zc+6.2})}
+const W=[[-25,-1],[-70,1],[-110,-1],[-150,1],[-195,-1]];W.forEach(a=>wreck(...a));
+const pm=()=>{const t=tileT(.19);return new THREE.MeshStandardMaterial({map:t,bumpMap:t,bumpScale:3,roughness:.75})};
+for(let z=-9;z>-L+10;z-=23)[-1,1].forEach(s=>{if(W.some(w=>w[1]==s&&Math.abs(w[0]-z)<8))return;const p=new THREE.Mesh(new THREE.BoxGeometry(.9,5,.9),pm());p.position.set(s*4.55,2.5,z);p.castShadow=p.receiveShadow=true;S.add(p);K.push({x1:s*4.55-.45,x2:s*4.55+.45,z1:z-.45,z2:z+.45})});
+const cm=new THREE.MeshStandardMaterial({map:gT,alphaTest:.5,side:THREE.DoubleSide,roughness:.5,metalness:.7});[-12,-45,-95,-175,-230].forEach(z=>pl(10,4,4.9,2,z,0,-Math.PI/2,cm));
+// exit door
+const door=new THREE.Mesh(new THREE.BoxGeometry(6,4.5,.4),mat({color:0x1d3a35,emissive:0x053a30}));door.position.set(0,2.25,-L+Z0-4);S.add(door);
+const dl=new THREE.PointLight(0x3dff9a,2,18);dl.position.set(0,3,-L+Z0-1);S.add(dl);
+// pickups
+const fz=[[-55,1.2],[-128,-1.2],[-188,1.5]],fuses=fz.map(([z,x])=>{const m=new THREE.Mesh(new THREE.BoxGeometry(.4,.5,.3),new THREE.MeshBasicMaterial({color:0xffcc33}));m.position.set(x,.9,z);S.add(m);const l=new THREE.PointLight(0xffaa22,.9,7);l.position.set(x,1.3,z);S.add(l);return{m,l,z,x,got:0}});
+const am=[],mA=new THREE.MeshBasicMaterial({color:0x5dff7a});[-15,-42,-88,-135,-170,-215].forEach(z=>{const m=new THREE.Mesh(new THREE.BoxGeometry(.3,.2,.2),mA);m.position.set(-1+rnd()*2,.2,z);S.add(m);am.push(m)});
+const notes=['ملاحظة 1: «العينة 12 هربت من الحاوية قبل الاصطدام. لا تقتربوا من الظلال.»','ملاحظة 2: «السائق كان يصرخ أن شيئاً يسير على السقف. بعدها انقطع الاتصال.»','ملاحظة 3: «الفيوز الأخير في يدك. البوابة في آخر النفق... اركض.»'];
+// weapon
+const gun=new THREE.Group(),gm=mat({color:0x0b0d0d});const g1=new THREE.Mesh(new THREE.BoxGeometry(.06,.09,.3),gm),g2=new THREE.Mesh(new THREE.BoxGeometry(.05,.14,.07),gm);g2.position.set(0,-.1,.1);gun.add(g1,g2);gun.position.set(.22,-.22,-.45);C.add(gun);
+// state
+const P={x:0,z:0,hp:100,yaw:0,pitch:0,ammo:6,res:20,rl:0,fz:0,t:0,kick:0};let play=0,hurt=0;
+const E=[],ray=new THREE.Raycaster();ray.far=40;let spT=3;
+function spawn(){if(E.length>=5)return;const g=new THREE.Group(),bm=mat({color:0x050707});
+ const b=new THREE.Mesh(new THREE.CylinderGeometry(.28,.38,1.5,8),bm),h=new THREE.Mesh(new THREE.SphereGeometry(.24,10,8),bm);h.position.y=1;g.add(b,h);[-.38,.38].forEach(x=>{const a=new THREE.Mesh(new THREE.CylinderGeometry(.06,.05,1,6),bm);a.position.set(x,.35,.3);a.rotation.x=-1.2;g.add(a)});
+ [-.09,.09].forEach(x=>{const e=new THREE.Mesh(new THREE.SphereGeometry(.035,6,6),new THREE.MeshBasicMaterial({color:0xff2200}));e.position.set(x,1.03,.21);g.add(e)});
+ b.castShadow=true;h.castShadow=true;g.traverse(o=>o.userData.en=g);const s=rnd()<.6?-1:1;let z=P.z+s*(22+rnd()*8);z=Math.max(-L+8,Math.min(0,z));g.position.set(-3.5+rnd()*7,.75,z);g.userData.hp=3;g.userData.cd=0;g.userData.sp=1.4+rnd()*.9;S.add(g);E.push(g);snd(70,.8,.15)}
+let A;function snd(f,d,v,t){if(!A)return;const o=A.createOscillator(),g=A.createGain(),n=A.currentTime;o.type=t||'sawtooth';o.frequency.setValueAtTime(f,n);o.frequency.exponentialRampToValueAtTime(25,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(A.destination);o.start();o.stop(n+d)}
+function msg(t,ms=4500){const m=$('ms');m.textContent=t;m.style.opacity=1;clearTimeout(msg.t);msg.t=setTimeout(()=>m.style.opacity=0,ms)}
+function hud(){$('am').textContent=P.ammo+' / '+P.res;$('hpi').style.width=Math.max(0,P.hp)+'%';$('ob').textContent=P.fz<3?'ابحث عن الفيوزات ('+P.fz+'/3)':'اذهب إلى بوابة الخروج'}
+function shoot(){if(!play||P.rl>0)return;if(P.ammo<=0){snd(900,.05,.1,'square');reload();return}
+ P.ammo--;P.kick=1;mz.intensity=3;setTimeout(()=>mz.intensity=0,60);snd(260,.18,.35,'square');
+ ray.setFromCamera({x:0,y:0},C);const hit=ray.intersectObjects(E,true)[0];
+ if(hit){const e=hit.object.userData.en;e.userData.hp--;e.position.z+=(e.position.z<P.z?-.6:.6);if(e.userData.hp<=0){S.remove(e);E.splice(E.indexOf(e),1);if(rnd()<.4){const m=new THREE.Mesh(new THREE.BoxGeometry(.3,.2,.2),mA);m.position.set(e.position.x,.2,e.position.z);S.add(m);am.push(m)}}}
+ hud()}
+function reload(){if(P.rl>0||P.ammo>=6||P.res<=0)return;P.rl=1.3;snd(150,.2,.1,'square')}
+function use(){if(!play)return;const f=fuses.find(f=>!f.got&&Math.hypot(f.x-P.x,f.z-P.z)<2.6);if(f){f.got=1;S.remove(f.m);S.remove(f.l);msg(notes[P.fz]);P.fz++;if(P.fz==3){S.remove(door);dl.intensity=4;msg(notes[2]+' — البوابة فُتحت!')}hud()}}
+function btn(id,fn){$(id).addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn()})}btn('fire',shoot);btn('rel',reload);btn('use',use);
+// input
+const mv={x:0,y:0},ks={};let sid=null,lid=null,sx=0,sy=0,lx=0,ly=0;
+addEventListener('touchstart',e=>{if(!play)return;for(const t of e.changedTouches){if(t.target.closest&&t.target.closest('.b'))continue;if(t.clientX<innerWidth/2&&sid==null){sid=t.identifier;sx=t.clientX;sy=t.clientY}else if(t.clientX>=innerWidth/2&&lid==null){lid=t.identifier;lx=t.clientX;ly=t.clientY}}},{passive:false});
+addEventListener('touchmove',e=>{e.preventDefault();for(const t of e.changedTouches){if(t.identifier==sid){let dx=(t.clientX-sx)/50,dy=(t.clientY-sy)/50,m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m}mv.x=dx;mv.y=dy;$('kn').style.transform=`translate(${dx*30}px,${dy*30}px)`}
+ if(t.identifier==lid){P.yaw-=(t.clientX-lx)*.006;P.pitch=Math.max(-1.2,Math.min(1.2,P.pitch-(t.clientY-ly)*.005));lx=t.clientX;ly=t.clientY}}},{passive:false});
+const te=e=>{for(const t of e.changedTouches){if(t.identifier==sid){sid=null;mv.x=mv.y=0;$('kn').style.transform=''}if(t.identifier==lid)lid=null}};addEventListener('touchend',te);addEventListener('touchcancel',te);
+addEventListener('keydown',e=>{ks[e.code]=1;if(e.code=='KeyR')reload();if(e.code=='KeyE')use()});addEventListener('keyup',e=>ks[e.code]=0);
+addEventListener('mousedown',e=>{if(play&&e.pointerType!='touch'&&!e.target.closest('.b')){if(document.pointerLockElement)shoot();else R.domElement.requestPointerLock&&R.domElement.requestPointerLock()}});
+addEventListener('mousemove',e=>{if(document.pointerLockElement){P.yaw-=e.movementX*.003;P.pitch=Math.max(-1.2,Math.min(1.2,P.pitch-e.movementY*.003))}});
+function col(){for(const b of K){const r=.45;if(P.x>b.x1-r&&P.x<b.x2+r&&P.z>b.z1-r&&P.z<b.z2+r){const d=[P.x-(b.x1-r),b.x2+r-P.x,P.z-(b.z1-r),b.z2+r-P.z],m=Math.min(...d),i=d.indexOf(m);if(i==0)P.x=b.x1-r;else if(i==1)P.x=b.x2+r;else if(i==2)P.z=b.z1-r;else P.z=b.z2+r}}}
+function end(win){play=0;document.exitPointerLock&&document.exitPointerLock();$('ov').style.display='flex';$('ov').querySelector('h1').textContent=win?'نجوت':'انتهى الأمر';$('tx').innerHTML=win?'خرجت من النفق ومعك الحقيقة. لكن الظلال ما زالت تنتظر تحت المدينة...':'ابتلعك الظلام. حاول مرة أخرى.';$('go').textContent='العب مجدداً';$('go').onclick=()=>location.reload()}
+$('go').onclick=()=>{$('ov').style.display='none';play=1;try{A=new(window.AudioContext||window.webkitAudioContext)();const o=A.createOscillator(),g=A.createGain();o.frequency.value=46;g.gain.value=.07;o.connect(g);g.connect(A.destination);o.start()}catch(e){}hud();msg('تحرّك نحو الظلام. ابحث عن الفيوزات الصفراء.')};
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;
+ if(play){P.t+=dt;
+ let fx=-mv.y+(ks.KeyW||ks.ArrowUp?1:0)-(ks.KeyS||ks.ArrowDown?1:0),sx2=mv.x+(ks.KeyD?1:0)-(ks.KeyA?1:0);
+ const sp=3.4,sy=Math.sin(P.yaw),cy=Math.cos(P.yaw);
+ P.x+=(-sy*fx+cy*sx2)*sp*dt;P.z+=(-cy*fx-sy*sx2)*sp*dt;
+ P.x=Math.max(-4.5,Math.min(4.5,P.x));P.z=Math.min(1.5,Math.max(P.fz==3?-L-3:-L+2,P.z));col();
+ if(P.fz==3&&P.z<-L+3)end(1);
+ const mvAmt=Math.hypot(fx,sx2);
+ C.position.set(P.x,1.7+Math.sin(P.t*8)*.04*Math.min(1,mvAmt),P.z);C.rotation.y=P.yaw;C.rotation.x=P.pitch+P.kick*.05;
+ P.kick=Math.max(0,P.kick-dt*8);gun.position.z=-.45+P.kick*.06;gun.position.y=-.22+Math.sin(P.t*8)*.006*mvAmt;
+ fl.intensity=2.4*(rnd()<.015?.3:1);dust.position.y=Math.sin(P.t*.3)*.2;dust.position.x=Math.cos(P.t*.2)*.2;
+ if(P.rl>0){P.rl-=dt;if(P.rl<=0){const n=Math.min(6-P.ammo,P.res);P.ammo+=n;P.res-=n;hud()}}
+ spT-=dt;if(spT<=0){spT=5+rnd()*4;spawn()}
+ for(const e of E){const dx=P.x-e.position.x,dz=P.z-e.position.z,d=Math.hypot(dx,dz);e.rotation.y=Math.atan2(dx,dz);
+  if(d>1.1){e.position.x+=dx/d*e.userData.sp*dt;e.position.z+=dz/d*e.userData.sp*dt}e.position.y=.75+Math.sin(P.t*6+e.id)*.05;
+  e.userData.cd-=dt;if(d<1.3&&e.userData.cd<=0){e.userData.cd=1;P.hp-=12;hurt=1;$('dm').style.opacity=1;snd(120,.3,.25);hud();if(P.hp<=0)end(0)}}
+ hurt=Math.max(0,hurt-dt*2);if(hurt<=0)$('dm').style.opacity=0;
+ for(let i=am.length-1;i>=0;i--){const a=am[i];if(Math.hypot(a.position.x-P.x,a.position.z-P.z)<1.2){S.remove(a);am.splice(i,1);P.res+=6;hud();msg('+6 ذخيرة',1500)}}
+ const nf=fuses.some(f=>!f.got&&Math.hypot(f.x-P.x,f.z-P.z)<2.6);$('use').style.display=nf?'flex':'none';
+ fuses.forEach(f=>{if(!f.got)f.m.rotation.y+=dt*2});
+ lamps.forEach((l,i)=>l.intensity=1.4*(Math.sin(P.t*(3+i)+i*7)>.92?.2:1))}
+ R.render(S,C)}
+requestAnimationFrame(loop);
+</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script></body></html>
