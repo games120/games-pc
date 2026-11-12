@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سكينة – مواقيت الصلاة والأدعية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#03170f; --bg2:#0a3d29; --card:rgba(255,255,255,.07); --line:rgba(167,243,208,.24);
+  --txt:#ffffff; --mut:#b7dcc8; --a:#16a34a; --b:#86efac; --v:#34d399;
+  --ease:cubic-bezier(.22,1,.36,1);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:radial-gradient(120% 80% at 50% 0%,var(--bg2),var(--bg) 62%);background-attachment:fixed;color:var(--txt);
+  font-family:'Cairo','Segoe UI',Tahoma,sans-serif;overflow-x:hidden;min-height:100vh}
+.glow{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%),rgba(134,239,172,.16),transparent 70%)}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.4;z-index:0;pointer-events:none;animation:float 14s ease-in-out infinite}
+.b1{width:380px;height:380px;background:#22c55e;top:-120px;right:-80px}
+.b2{width:340px;height:340px;background:#bbf7d0;opacity:.18;bottom:-100px;left:-90px;animation-delay:-6s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,60px) scale(1.12)}}
+nav{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:22px 20px;display:flex;justify-content:space-between;align-items:center;animation:fade 1s var(--ease) both}
+.logo{font-weight:900;font-size:1.45rem}
+.logo i{font-style:normal;background:linear-gradient(90deg,var(--b),#fff);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav a.link{color:var(--mut);text-decoration:none;margin-inline-start:22px;font-weight:600;transition:color .3s}
+nav a.link:hover{color:#fff}
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 20px 80px;text-align:center}
+.hero{padding-top:clamp(30px,7vh,80px)}
+.badge{display:inline-flex;gap:8px;align-items:center;padding:9px 22px;border-radius:999px;font-size:.92rem;font-weight:600;color:#dcfce7;
+  background:rgba(34,197,94,.14);border:1px solid var(--line);position:relative;overflow:hidden;animation:rise .9s var(--ease) .1s both}
+.badge::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.3) 50%,transparent 70%);transform:translateX(130%);animation:shine 4s ease-in-out 1.5s infinite}
+@keyframes shine{to{transform:translateX(-130%)}}
+h1{margin:30px 0 0;font-weight:900;line-height:1.4;font-size:clamp(2.2rem,7vw,4.5rem)}
+h1 .ln{display:block}
+h1 .w{display:inline-block;opacity:0;transform:translateY(40px) rotateX(-40deg);filter:blur(8px);animation:word .9s var(--ease) forwards;animation-delay:calc(.3s + var(--i)*.11s)}
+@keyframes word{to{opacity:1;transform:none;filter:blur(0)}}
+.grad{background:linear-gradient(90deg,#fff,var(--b) 40%,var(--v) 75%,#fff);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:word .9s var(--ease) forwards,flow 6s linear infinite}
+@keyframes flow{to{background-position:-220% 0}}
+.sub{max-width:660px;margin:26px auto 0;color:var(--mut);font-size:clamp(1rem,2.3vw,1.16rem);line-height:2;animation:rise 1s var(--ease) 1s both}
+.sub b{color:#fff}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px;animation:rise 1s var(--ease) 1.2s both}
+.btn{font-family:inherit;font-weight:700;font-size:1rem;padding:15px 34px;border-radius:999px;border:1px solid var(--line);color:#fff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;position:relative;overflow:hidden;
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .4s}
+.btn.main{background:linear-gradient(135deg,#22c55e,#15803d 60%,#059669);border-color:transparent;box-shadow:0 10px 30px -8px rgba(34,197,94,.7)}
+.btn.ghost{background:rgba(255,255,255,.05);backdrop-filter:blur(8px)}
+.btn:hover{transform:translateY(-4px) scale(1.03)}
+.btn.main:hover{box-shadow:0 18px 40px -8px rgba(34,197,94,.9)}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn:active{transform:scale(.97)}
+.btn .ar{display:inline-block;transition:transform .4s var(--ease)}
+.btn.main:hover .ar{transform:translateX(-6px)}
+.btn.ghost:hover .ar{transform:rotate(90deg) scale(1.2)}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.4);transform:scale(0);animation:rip .7s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:70px}
+.stat,.svc,.pt{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 16px;backdrop-filter:blur(10px);transition:transform .5s var(--ease),border-color .4s,background .4s,box-shadow .5s}
+.stat:hover,.svc:hover,.pt:hover{transform:translateY(-8px);border-color:rgba(134,239,172,.6);background:rgba(255,255,255,.1)}
+.num{font-size:clamp(1.6rem,4.4vw,2.6rem);font-weight:900;color:var(--b);line-height:1.3;font-variant-numeric:tabular-nums}
+.lbl{color:var(--mut);font-weight:600;margin-top:6px}
+h2{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;margin:100px 0 12px}
+.lead{color:var(--mut);max-width:580px;margin:0 auto 30px;line-height:1.9}
+.tools{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+select{font-family:inherit;font-weight:600;font-size:1rem;padding:13px 22px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.07);color:#fff;cursor:pointer;outline-offset:3px}
+select option{color:#000}
+.btn.sm{padding:12px 24px;font-size:.95rem}
+.times{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+.pt{padding:24px 12px}
+.pt .n{color:var(--mut);font-weight:700}
+.pt .t{font-size:1.7rem;font-weight:900;margin-top:6px;font-variant-numeric:tabular-nums}
+.pt.next{background:linear-gradient(160deg,rgba(34,197,94,.35),rgba(255,255,255,.1));border-color:#86efac;box-shadow:0 0 0 0 rgba(134,239,172,.5);animation:pulse 2.4s ease-out infinite}
+.pt.next .n::after{content:" • القادمة";color:var(--b)}
+@keyframes pulse{70%{box-shadow:0 0 0 16px rgba(134,239,172,0)}100%{box-shadow:0 0 0 0 rgba(134,239,172,0)}}
+.note{color:var(--mut);font-size:.88rem;margin-top:20px;line-height:1.8}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;text-align:right}
+.svc{padding:26px 24px;display:flex;flex-direction:column;gap:12px}
+.svc h3{margin:0;font-size:1.1rem;color:var(--b)}
+.dua{font-family:'Amiri','Cairo',serif;font-size:1.45rem;line-height:2.1;margin:0}
+.src{color:var(--mut);font-size:.85rem;margin:0}
+.cp{align-self:flex-start;font-family:inherit;font-weight:600;font-size:.88rem;padding:8px 18px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;position:relative;overflow:hidden;transition:background .3s,transform .3s var(--ease)}
+.cp:hover{background:rgba(134,239,172,.25);transform:translateY(-2px)}
+.final{margin-top:100px;padding:54px 24px;border-radius:30px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(34,197,94,.3),rgba(255,255,255,.08),rgba(134,239,172,.2));background-size:200% 200%;animation:flow2 8s ease infinite}
+@keyframes flow2{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.final .dua{font-size:clamp(1.6rem,4vw,2.4rem);margin-bottom:8px}
+footer{color:var(--mut);font-size:.9rem;margin-top:46px}
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,30px);opacity:0;background:#f0fdf4;color:#064e3b;font-weight:700;padding:11px 24px;border-radius:999px;z-index:9;transition:all .5s var(--ease);pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.rv{opacity:0;transform:translateY(40px);transition:opacity .9s var(--ease),transform .9s var(--ease),border-color .4s,background .4s;transition-delay:calc(var(--d,0)*.08s)}
+.rv.in{opacity:1;transform:none}
+.rv.in:hover{transform:translateY(-8px);transition-delay:0s}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media(max-width:640px){.stats{grid-template-columns:1fr}nav a.link{display:none}.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="glow" id="glow"></div><div class="blob b1"></div><div class="blob b2"></div>
+
+<nav>
+  <div class="logo">🕌 <i>سكينة</i></div>
+  <div><a class="link" href="#times">المواقيت</a><a class="link" href="#duas">الأدعية</a></div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="badge">🕋 مواقيت الصلاة بحسب تقويم أم القرى</div>
+    <h1><span class="ln" id="l1"></span><span class="ln" id="l2"></span></h1>
+    <p class="sub">مواقيت الصلاة لمدينتك مع عدٍّ تنازلي للصلاة القادمة، وأدعية وأذكار ثابتة من القرآن الكريم والسنة النبوية الصحيحة، مع ذكر مصدر كل منها.</p>
+    <div class="cta">
+      <a class="btn main" href="#times">مواقيت اليوم <span class="ar">←</span></a>
+      <a class="btn ghost" href="#duas">الأدعية والأذكار <span class="ar">✦</span></a>
+    </div>
+    <div class="stats">
+      <div class="stat rv" style="--d:0"><div class="num" data-to="5">0</div><div class="lbl">صلوات مفروضة كل يوم</div></div>
+      <div class="stat rv" style="--d:1"><div class="num" id="cd">--:--:--</div><div class="lbl" id="cdl">الصلاة القادمة</div></div>
+      <div class="stat rv" style="--d:2"><div class="num" id="hj" style="font-size:clamp(1.2rem,3vw,1.7rem)">--</div><div class="lbl">التاريخ الهجري</div></div>
+    </div>
+  </section>
+
+  <section id="times">
+    <h2 class="rv">مواقيت الصلاة اليوم</h2>
+    <p class="lead rv">اختر مدينتك أو اسمح بتحديد موقعك لحساب المواقيت بدقة.</p>
+    <div class="tools rv">
+      <select id="city" aria-label="المدينة"></select>
+      <button class="btn ghost sm" id="loc" type="button">📍 استخدم موقعي</button>
+    </div>
+    <div class="times" id="tm"></div>
+    <p class="note" id="nt"></p>
+  </section>
+
+  <section id="duas">
+    <h2 class="rv">أدعية وأذكار الصلاة</h2>
+    <p class="lead rv">نصوص ثابتة منقولة من القرآن والسنة، مع المصدر تحت كل دعاء.</p>
+    <div class="grid" id="dg"></div>
+  </section>
+
+  <section class="final rv">
+    <p class="dua">﴿ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا ﴾</p>
+    <p class="src">سورة النساء، الآية 103</p>
+  </section>
+  <footer>المواقيت محسوبة فلكياً وقد تختلف دقيقة أو دقيقتين عن التقويم الرسمي، فاعتمد أذان مسجدك عند الاختلاف.</footer>
+</main>
+<div class="toast" id="toast">تم النسخ</div>
+
+<script>
+// ---------- العنوان ----------
+(function(){
+  var L=[["أقم","صلاتك","في","وقتها"],["وطمئن","قلبك","بذكر","الله"]],i=0;
+  L.forEach(function(ws,k){var el=document.getElementById("l"+(k+1));
+    ws.forEach(function(w,j){var s=document.createElement("span");s.className="w"+(k?" grad":"");s.style.setProperty("--i",i++);s.textContent=w;el.appendChild(s);if(j<ws.length-1)el.appendChild(document.createTextNode(" "))})});
+})();
+
+// ---------- الأدعية (نصوص صحيحة مع المصدر) ----------
+var DUAS=[
+["دعاء الاستفتاح","سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلَا إِلَهَ غَيْرُكَ","رواه أبو داود والترمذي"],
+["بعد الوضوء","أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ","رواه مسلم"],
+["بعد الأذان","اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ","رواه البخاري"],
+["دخول المسجد","اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ","رواه مسلم. وعند الخروج: اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ"],
+["في السجود","سُبْحَانَ رَبِّيَ الْأَعْلَى","رواه مسلم. وقال ﷺ: «أَقْرَبُ مَا يَكُونُ الْعَبْدُ مِنْ رَبِّهِ وَهُوَ سَاجِدٌ، فَأَكْثِرُوا الدُّعَاءَ»"],
+["بعد السلام من الصلاة","أَسْتَغْفِرُ اللَّهَ (ثلاثاً)، اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ","رواه مسلم"],
+["دعاء إبراهيم عليه السلام","رَبِّ اجْعَلْنِي مُقِيمَ الصَّلَاةِ وَمِن ذُرِّيَّتِي ۚ رَبَّنَا وَتَقَبَّلْ دُعَاءِ","سورة إبراهيم، الآية 40"]
+];
+var dg=document.getElementById("dg");
+DUAS.forEach(function(d,i){
+  var c=document.createElement("div");c.className="svc rv";c.style.setProperty("--d",i%2);
+  c.innerHTML="<h3></h3><p class='dua'></p><p class='src'></p><button class='cp' type='button'>نسخ الدعاء</button>";
+  c.children[0].textContent=d[0];c.children[1].textContent=d[1];c.children[2].textContent=d[2];
+  c.children[3].onclick=function(){copy(d[1])};dg.appendChild(c);
+});
+function toast(t){var e=document.getElementById("toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove("on")},1800)}
+function copy(t){
+  function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");toast("تم النسخ")}catch(e){toast("تعذّر النسخ")}a.remove()}
+  try{navigator.clipboard.writeText(t).then(function(){toast("تم النسخ")},fb)}catch(e){fb()}
+}
+
+// ---------- حساب المواقيت (أم القرى: الفجر 18.5°، العشاء 90 دقيقة بعد المغرب و120 في رمضان) ----------
+var R=Math.PI/180;
+function sunPos(D){
+  var g=(357.529+.98560028*D)*R,q=280.459+.98564736*D,L=(q+1.915*Math.sin(g)+.02*Math.sin(2*g))*R,e=(23.439-3.6e-7*D)*R;
+  var RA=(Math.atan2(Math.cos(e)*Math.sin(L),Math.cos(L))/R/15+24)%24,eq=((q/15)%24+24)%24-RA;
+  if(eq>12)eq-=24;if(eq<-12)eq+=24;
+  return {d:Math.asin(Math.sin(e)*Math.sin(L)),eq:eq};
+}
+function calc(Y,M,Dd,lat,lng,tz,ram){
+  var D0=Date.UTC(Y,M,Dd)/864e5+2440587.5-2451545,la=lat*R;
+  function ev(a,sign){
+    var t=12;
+    for(var i=0;i<3;i++){
+      var s=sunPos(D0+(t-tz)/24),noon=12+tz-lng/15-s.eq,c;
+      if(a==="noon")return noon;
+      if(a==="asr"){var alt=Math.atan(1/(1+Math.tan(Math.abs(la-s.d))));c=(Math.sin(alt)-Math.sin(la)*Math.sin(s.d))/(Math.cos(la)*Math.cos(s.d))}
+      else c=(-Math.sin(a*R)-Math.sin(la)*Math.sin(s.d))/(Math.cos(la)*Math.cos(s.d));
+      t=noon+sign*Math.acos(Math.max(-1,Math.min(1,c)))/R/15;
+    }
+    return t;
+  }
+  var mg=ev(.833,1);
+  return {fajr:ev(18.5,-1),sunrise:ev(.833,-1),dhuhr:ev("noon",0),asr:ev("asr",1),maghrib:mg,isha:mg+(ram?120:90)/60};
+}
+function fmt(h){
+  var m=Math.round(h*60)%1440,hh=Math.floor(m/60),mm=m%60,ap=hh>=12?"م":"ص";hh=hh%12||12;
+  return hh+":"+(mm<10?"0":"")+mm+" "+ap;
+}
+
+// ---------- الواجهة ----------
+var CITIES=[["الرياض",24.7136,46.6753],["مكة المكرمة",21.4225,39.8262],["المدينة المنورة",24.4672,39.6111],["جدة",21.4858,39.1925],["الدمام",26.4207,50.0888],["أبها",18.2164,42.5053],["تبوك",28.3838,36.555]];
+var cur={name:"الرياض",lat:24.7136,lng:46.6753,tz:3};
+var sel=document.getElementById("city");
+CITIES.forEach(function(c,i){var o=document.createElement("option");o.value=i;o.textContent=c[0];sel.appendChild(o)});
+try{var sv=localStorage.getItem("city");if(sv!==null&&CITIES[sv]){sel.value=sv;pick(+sv,true)}}catch(e){}
+function pick(i,quiet){var c=CITIES[i];cur={name:c[0],lat:c[1],lng:c[2],tz:3};try{localStorage.setItem("city",i)}catch(e){}if(!quiet)draw()}
+sel.onchange=function(){pick(+sel.value)};
+document.getElementById("loc").onclick=function(){
+  if(!navigator.geolocation){toast("المتصفح لا يدعم تحديد الموقع");return}
+  navigator.geolocation.getCurrentPosition(function(p){
+    cur={name:"موقعك الحالي",lat:p.coords.latitude,lng:p.coords.longitude,tz:-new Date().getTimezoneOffset()/60};
+    draw();toast("تم تحديث المواقيت لموقعك")
+  },function(){toast("تعذّر تحديد الموقع، اختر مدينتك من القائمة")},{timeout:8000});
+};
+var NAMES=[["fajr","الفجر"],["sunrise","الشروق"],["dhuhr","الظهر"],["asr","العصر"],["maghrib","المغرب"],["isha","العشاء"]];
+var tm=document.getElementById("tm"),today=null,tomorrowFajr=0;
+function tzNow(){return new Date(Date.now()+cur.tz*36e5)}
+function draw(){
+  var n=tzNow(),Y=n.getUTCFullYear(),M=n.getUTCMonth(),D=n.getUTCDate(),ram=false,hj="--";
+  try{ram=parseInt(new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{month:"numeric",timeZone:"UTC"}).format(Date.UTC(Y,M,D,12)),10)===9;
+      hj=new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(Date.UTC(Y,M,D,12))}catch(e){}
+  today=calc(Y,M,D,cur.lat,cur.lng,cur.tz,ram);
+  tomorrowFajr=calc(Y,M,D+1,cur.lat,cur.lng,cur.tz,ram).fajr+24;
+  document.getElementById("hj").textContent=hj;
+  var fri=n.getUTCDay()===5;
+  tm.innerHTML="";
+  NAMES.forEach(function(k,i){
+    var c=document.createElement("div");c.className="pt rv in";c.dataset.k=k[0];
+    c.innerHTML="<div class='n'></div><div class='t'></div>";
+    c.children[0].textContent=(k[0]==="dhuhr"&&fri)?"الجمعة":k[1];c.children[1].textContent=fmt(today[k[0]]);
+    c.style.animation="rise .8s var(--ease) "+(i*.07)+"s both";tm.appendChild(c);
+  });
+  document.getElementById("nt").textContent="المدينة: "+cur.name+(ram?" • العشاء بعد المغرب بـ120 دقيقة (رمضان)":" • العشاء بعد المغرب بـ90 دقيقة")+(fri?" • اليوم الجمعة":"");
+  tick();
+}
+function tick(){
+  if(!today)return;
+  var n=tzNow(),h=n.getUTCHours()+n.getUTCMinutes()/60+n.getUTCSeconds()/3600,nx=null,t=0;
+  var P=[["fajr","الفجر"],["dhuhr","الظهر"],["asr","العصر"],["maghrib","المغرب"],["isha","العشاء"]];
+  for(var i=0;i<P.length;i++){if(today[P[i][0]]>h){nx=P[i];t=today[P[i][0]];break}}
+  if(!nx){nx=P[0];t=tomorrowFajr}
+  var s=Math.max(0,Math.round((t-h)*3600)),f=function(x){return(x<10?"0":"")+x};
+  document.getElementById("cd").textContent=f(Math.floor(s/3600))+":"+f(Math.floor(s%3600/60))+":"+f(s%60);
+  document.getElementById("cdl").textContent="باقٍ على "+nx[1];
+  Array.prototype.forEach.call(tm.children,function(c){c.classList.toggle("next",c.dataset.k===nx[0])});
+  if(h<0.02||(s===0))draw();
+}
+draw();setInterval(tick,1000);
+
+// ---------- ظهور عند التمرير + عدّاد ----------
+var io=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(!e.isIntersecting)return;e.target.classList.add("in");io.unobserve(e.target);
+  var n=e.target.querySelector(".num[data-to]");if(n)count(n);
+})},{threshold:.15});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});
+function count(n){var to=+n.dataset.to,t0=performance.now();
+  (function f(t){var p=Math.min((t-t0)/1400,1);n.textContent=Math.round(to*(1-Math.pow(1-p,4)));if(p<1)requestAnimationFrame(f)})(t0)}
+// ---------- توهّج المؤشر + تموّج الأزرار ----------
+var gl=document.getElementById("glow");
+addEventListener("pointermove",function(e){gl.style.setProperty("--mx",e.clientX+"px");gl.style.setProperty("--my",e.clientY+"px")},{passive:true});
+document.querySelectorAll(".btn,.cp").forEach(function(b){
+  b.addEventListener("pointerdown",function(e){
+    var r=b.getBoundingClientRect(),s=document.createElement("span"),z=Math.max(r.width,r.height);
+    s.className="ripple";s.style.width=s.style.height=z+"px";s.style.left=(e.clientX-r.left-z/2)+"px";s.style.top=(e.clientY-r.top-z/2)+"px";
+    b.appendChild(s);setTimeout(function(){s.remove()},700);
+  });
+});
+</script>
+</body>
+</html>
